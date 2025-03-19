@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_BRANCH = 'new-release-branch'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Checkout the code from the repository
+                git 'https://github.com/sidhiprada22/test-automation.git'
+            }
+        }
+
+        stage('Create New Branch') {
+            steps {
+                script {
+                    // Create and checkout the 'automation' branch
+                    sh 'git checkout -b ${env.GIT_BRANCH}'
+                    // Push the new branch to the remote repository
+                    sh 'git push origin ${env.GIT_BRANCH}'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            // Clean up, can add any steps you want after the pipeline finishes
+            echo 'Pipeline completed.'
+        }
+    }
+}
